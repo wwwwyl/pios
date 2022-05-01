@@ -10,7 +10,7 @@ pios是一个将buaa-os-lab-2022实验的MOS系统移植到raspi3-Aarch64环境�
 * Lab3: 异常处理和进程管理
 * Lab4: 系统调用 / IPC 和 Fork
 * Lab5: 文件系统
-* Lab6：Shell
+* Lab6: Shell
 
 任务进度： 
 
