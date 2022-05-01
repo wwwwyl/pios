@@ -34,3 +34,7 @@ pios是一个将buaa-os-lab-2022实验的MOS系统移植到raspi3-Aarch64环境�
 * QEMU 5.0.0
   * 编译安装见指导书
   * 通常需要安装libglibc，libpixman之类，apt安装对应版本dev包即可，不需要自行编译
+
+## 参考
+* BUAA-OS-LAB-2022 MOS
+* Github:[bztsrc/raspi3-tutorial](https://github.com/bztsrc/raspi3-tutorial)
