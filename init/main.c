@@ -1,17 +1,14 @@
 #include "uart.h"
 #include "printf.h"
+#include "pmap.h"
 
 void main(){
-    // set up serial console
     uart_init();
 
-    printf("Hello world! printf\n");
+	printf("main.c:\tmain is start ...\n");
 
-    // echo everything back
-    while(1) {
-        char c;
-        uart_send(c=uart_getc());
-        if(c=='q')break;
-    }
-    panic("~~~~~~~~~~main end~~~~~~~~~~");
+	aarch64_init();
+	panic("main is over is error!");
+
+	return 0;
 }
