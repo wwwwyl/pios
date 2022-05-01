@@ -50,3 +50,10 @@ _panic(const char *file, int line, const char *fmt,...)
 
 	for(;;);
 }
+
+void show_el(){
+    unsigned long el;
+    asm volatile ("mrs %0, CurrentEL" : "=r" (el));
+
+    printf("Current EL is: %x\n", (el>>2)&3);
+}
