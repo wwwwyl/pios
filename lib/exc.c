@@ -23,7 +23,7 @@
  *
  */
 
-#include "uart.h"
+#include "printf.h"
 
 /**
  * common exception handler

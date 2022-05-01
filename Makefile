@@ -8,16 +8,16 @@
 boot_dir	  := boot
 init_dir	  := init
 lib_dir		  := lib
-# mm_dir		  := mm
+mm_dir		  := mm
 tools_dir	  := tools
 
 link_script   := $(tools_dir)/link.ld
 
-modules		  := boot init lib
+modules		  := boot init lib mm
 objects		  := $(boot_dir)/start.o			  \
 				 $(init_dir)/*.o			  \
-				 $(lib_dir)/*.o
-				#  $(mm_dir)/*.o
+				 $(lib_dir)/*.o               \
+				 $(mm_dir)/*.o
 
 .PHONY: all $(modules) clean
 
