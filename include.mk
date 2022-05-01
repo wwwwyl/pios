@@ -9,6 +9,6 @@
 
 CROSS_COMPILE :=  /home/wyl/pios/gcc-arm-11.2-2022.02-x86_64-aarch64-none-elf/bin/aarch64-none-elf-
 CC            := $(CROSS_COMPILE)gcc
-CFLAGS        := -Wall -O2 -ffreestanding -nostdinc -nostdlib -nostartfiles
+CFLAGS        := -Wall -O2 -ffreestanding -fno-stack-protector -nostdinc -nostdlib -nostartfiles
 LD            := $(CROSS_COMPILE)ld
 OBJCOPY       := $(CROSS_COMPILE)objcopy

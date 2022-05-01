@@ -1,14 +1,17 @@
 #include "uart.h"
-#include "mbox.h"
+#include "printf.h"
 
 void main(){
     // set up serial console
     uart_init();
-    
-    uart_puts("Hello world!");
+
+    printf("Hello world! printf\n");
 
     // echo everything back
     while(1) {
-        uart_send(uart_getc());
+        char c;
+        uart_send(c=uart_getc());
+        if(c=='q')break;
     }
+    panic("~~~~~~~~~~main end~~~~~~~~~~");
 }

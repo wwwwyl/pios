@@ -36,6 +36,9 @@
 #define UART0_IMSC      ((volatile unsigned int*)(MMIO_BASE+0x00201038))
 #define UART0_ICR       ((volatile unsigned int*)(MMIO_BASE+0x00201044))
 
+// get address from linker
+extern volatile unsigned char _end;
+
 /**
  * Set baud rate and characteristics (115200 8N1) and map to GPIO
  */
@@ -99,29 +102,3 @@ char uart_getc() {
     return r=='\r'?'\n':r;
 }
 
-/**
- * Display a string
- */
-void uart_puts(char *s) {
-    while(*s) {
-        /* convert newline to carrige return + newline */
-        if(*s=='\n')
-            uart_send('\r');
-        uart_send(*s++);
-    }
-}
-
-/**
- * Display a binary value in hexadecimal
- */
-void uart_hex(unsigned int d) {
-    unsigned int n;
-    int c;
-    for(c=28;c>=0;c-=4) {
-        // get highest tetrad
-        n=(d>>c)&0xF;
-        // 0-9 => '0'-'9', 10-15 => 'A'-'F'
-        n+=n>9?0x37:0x30;
-        uart_send(n);
-    }
-}
