@@ -26,8 +26,17 @@ pios是一个将buaa-os-lab-2022实验的MOS系统移植到raspi3-Aarch64环境�
   * 实验环境选择x86_64 Linux hosted cross toolchains for AArch64 bare-metal target 2022.02
   * [Download](https://developer.arm.com/-/media/Files/downloads/gnu/11.2-2022.02/binrel/gcc-arm-11.2-2022.02-x86_64-aarch64-none-elf.tar.xz)
   * 在include.mk中配置交叉编译器环境
-
-
+  
+    ex.
+  
+    ```makefile
+    CROSS_COMPILE :=  /gcc-arm-11.2-2022.02-x86_64-aarch64-none-elf/bin/aarch64-none-elf-
+    CC            := $(CROSS_COMPILE)gcc
+    CFLAGS        := -Wall -O2 -ffreestanding -fno-stack-protector -nostdinc -nostdlib -nostartfiles
+    LD            := $(CROSS_COMPILE)ld
+    OBJCOPY       := $(CROSS_COMPILE)objcopy
+    # CFLAGS没有引入标准库，可能需要改
+    ```
 
 #### 硬件模拟器
 
