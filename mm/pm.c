@@ -47,6 +47,7 @@ void aarch64_detect_memory()
 
 static void *alloc(u_int n, u_int align, int clear)
 {
+	return NULL;
 	// u_long alloced_mem;
 	// /* Initialize `freemem` if this is the first time. The first virtual address that the
 	//  * linker did *not* assign to any kernel code or global variables. */
@@ -74,21 +75,21 @@ static void *alloc(u_int n, u_int align, int clear)
 
 // 物理内存初始化
 void aarch64_pm_init() {
-
+	return;
 }
 
 // 空闲页面全塞进链表
 void page_init() {
-
+	return;
 }
 
 // 释放物理页面
 void page_free(struct Page *p) {
-
+	return;
 }
 
 // 分配一个物理页面
 int page_alloc(struct Page **pp) {
-	
+	return 0;
 }
 

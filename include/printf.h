@@ -19,4 +19,6 @@ void _panic(const char *, int, const char *, ...)
 
 #define panic(...) _panic(__FILE__, __LINE__, __VA_ARGS__)
 
+void show_el();
+
 #endif /* _printf_h_ */

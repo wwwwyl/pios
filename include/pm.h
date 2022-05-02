@@ -13,8 +13,10 @@ struct Page {
 };
 
 
-
 void aarch64_init();
+void aarch64_detect_memory();
+void aarch64_pm_init();
+void page_init();
 int page_alloc(struct Page **pp);
 void page_free(struct Page *pp);
 

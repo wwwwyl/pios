@@ -1,5 +1,6 @@
 #include "uart.h"
 #include "printf.h"
+#include "pm.h"
 
 int main(){
     uart_init();
