@@ -2,6 +2,7 @@
 #define _PMAP_H_
 
 #include "queue.h"
+#include "types.h"
 
 LIST_HEAD(Page_list, Page);
 typedef LIST_ENTRY(Page) Page_LIST_entry_t;

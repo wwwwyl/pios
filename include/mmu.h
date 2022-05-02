@@ -1,6 +1,8 @@
 #ifndef _MMU_H_
 #define _MMU_H_
 
+#include "types.h"
+
 #define BY2PG		4096
 
 #define PTE_VALID 1

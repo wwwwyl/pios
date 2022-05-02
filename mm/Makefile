@@ -8,7 +8,7 @@ INCLUDES	:= -I./ -I../ -I../include/
 
 .PHONY: clean
 
-all: pmap.o
+all: pm.o vm.o
 
 clean:
 	rm -rf *~ *.o

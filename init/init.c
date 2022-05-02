@@ -1,5 +1,5 @@
 #include "printf.h"
-#include "pmap.h"
+#include "pm.h"
 
 void exc_test(){
     printf("init.c:\texc_test() is called\n");
