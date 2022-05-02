@@ -23,6 +23,12 @@ struct Page *pages;
 static uint64 freemem;
 static struct Page_list page_free_list;
 
+void bzero(void *m, int n) {
+	char *c = (char*)m;
+	for (int i=0; i<n; i++)
+		*(c+i) = 0;
+}
+
 
 /* Overview:
  	Initialize basemem and npage.
@@ -45,41 +51,46 @@ void aarch64_detect_memory()
     printf("_end = 0x%08x\n", (uint64)&_end);
 }
 
+// 内核页表建好之前，使用此函数分配内存
 static void *alloc(u_int n, u_int align, int clear)
 {
-	return NULL;
-	// u_long alloced_mem;
-	// /* Initialize `freemem` if this is the first time. The first virtual address that the
-	//  * linker did *not* assign to any kernel code or global variables. */
-	// if (freemem == 0) {
-	// 	freemem = (u_long)_end;
-	// }
-	// /* Step 1: Round up `freemem` up to be aligned properly */
-	// freemem = ROUND(freemem, align);
-	// /* Step 2: Save current value of `freemem` as allocated chunk. */
-	// alloced_mem = freemem;
-	// /* Step 3: Increase `freemem` to record allocation. */
-	// freemem = freemem + n;
-	// /* Check if we're out of memory. If we are, PANIC !! */
-	// if (PADDR(freemem) >= maxpa) {
-	// 	panic("out of memory\n");
-	// 	return (void *)-E_NO_MEM;
-	// }
-	// /* Step 4: Clear allocated chunk if parameter `clear` is set. */
-	// if (clear) {
-	// 	bzero((void *)alloced_mem, n);
-	// }
-	// /* Step 5: return allocated chunk. */
-	// return (void *)alloced_mem;
+	// return NULL;
+	u_long alloced_mem;
+	/* Initialize `freemem` if this is the first time. The first virtual address that the
+	 * linker did *not* assign to any kernel code or global variables. */
+	if (freemem == 0) {
+		freemem = (u_long)_end;
+	}
+	printf("freemem = 0x%x\n", freemem);
+	/* Step 1: Round up `freemem` up to be aligned properly */
+	freemem = ROUND(freemem, align);
+	/* Step 2: Save current value of `freemem` as allocated chunk. */
+	alloced_mem = freemem;
+	/* Step 3: Increase `freemem` to record allocation. */
+	freemem = freemem + n;
+	/* Check if we're out of memory. If we are, PANIC !! */
+	if (freemem >= maxpa) {  
+		panic("out of memory\n");
+		return (void *)-E_NO_MEM;
+	}
+	/* Step 4: Clear allocated chunk if parameter `clear` is set. */
+	if (clear) {
+		bzero((void *)alloced_mem, n);
+	}
+	/* Step 5: return allocated chunk. */
+	return (void *)alloced_mem;
 }
 
 // 物理内存初始化
-void aarch64_pm_init() {
-	return;
-}
+// void aarch64_pm_init() {
+// 	Pte pgdir0 = alloc(BY2PG, BY2PG, 1);
+
+// 	return;
+// }
 
 // 空闲页面全塞进链表
 void page_init() {
+
 	return;
 }
 
