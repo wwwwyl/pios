@@ -36,3 +36,28 @@ typedef uint64 Pte;
 #define E_NO_MEM	4	// Request failed due to memory shortage
 #define E_NO_FREE_ENV   5       // Attempt to create a new environment beyond
 				// the maximum allowed
+
+/*
+                                 计划中的内存布局
+
+ o       虚存顶端 -----> +----------------------------+------------0xFFFF FFFF FFFF FFFF
+ o                      |       外设，和一些乱七八糟的  |  
+ o       KERNTOP -----> +----------------------------+------------0xFFFF FFFF 0400 0000  ==  Physics Memory Max		
+ o                      |       Kernel Stack         |                 		                                     
+ o                      +----------------------------+----------               64MB，线性映射到物理内存
+ o                      |       Kernel Text          |                        			
+ o      KERNBASE -----> +----------------------------+------------0xFFFF FFFF 0000 0000 
+ o                      |                            | 
+ o                      |                            | 
+ o                      |                            | 
+ o                      |                            | 
+ o                      |                            |               体系结构不让用
+ o                      |       disabled             |  
+ o                      |                            | 
+ o                      |                            | 
+ o                      |                            | 
+ o                      |                            | 
+ o      USERTOP         +----------------------------+------------0x0000 0000 FFFF FFFF 	
+ o                      |       用途未知              |  
+ o      USERBASE        +----------------------------+------------0x0000 0000 0000 0000	
+*/
