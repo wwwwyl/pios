@@ -7,7 +7,7 @@
 
 # Exercise 1.1. Please modify the CROSS_COMPILE path.
 
-CROSS_COMPILE :=  /home/wyl/pios/gcc-arm-11.2-2022.02-x86_64-aarch64-none-elf/bin/aarch64-none-elf-
+CROSS_COMPILE :=  ~/buaaOS/gcc-arm-10.3-2021.07-x86_64-aarch64-none-elf/bin/aarch64-none-elf-
 CC            := $(CROSS_COMPILE)gcc
 CFLAGS        := -Wall -O2 -ffreestanding -fno-stack-protector -nostdinc -nostdlib -nostartfiles
 LD            := $(CROSS_COMPILE)ld
