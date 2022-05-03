@@ -28,6 +28,7 @@
 #endif // !_MMU_H_
 
 typedef uint64 Pte;
+typedef uint64* Pgdir;
 
 #define E_UNSPECIFIED	1	// Unspecified or unknown problem
 #define E_BAD_ENV       2       // Environment doesn't exist or otherwise
@@ -61,3 +62,4 @@ typedef uint64 Pte;
  o                      |       用途未知              |  
  o      USERBASE        +----------------------------+------------0x0000 0000 0000 0000	
 */
+
