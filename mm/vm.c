@@ -24,3 +24,19 @@ void set_ttbr1_el1(Pte pgdir) {
 //   );
 //   return res;
 // }
+
+// 建立范围映射
+int vm_map(Pgdir pgdir0, uint64 va, uint64 pa, u_int perm) {
+    return 0;
+}
+
+int page_insert() {
+    return 0;
+}
+
+int vm_walk(Pgdir pgdir0, uint64 va, int create, Pte **pppte) {
+    return 0;
+}
+
+
+
