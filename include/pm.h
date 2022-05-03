@@ -15,9 +15,23 @@ struct Page {
 
 void aarch64_init();
 void aarch64_detect_memory();
-void aarch64_pm_init();
+void pm_init();
 void page_init();
 int page_alloc(struct Page **pp);
 void page_free(struct Page *pp);
+
+extern struct Page *pages;
+
+static inline u_long
+page2ppn(struct Page *pp)
+{
+	return pp - pages;
+}
+
+static inline u_long
+page2pa(struct Page *pp)
+{
+	return page2ppn(pp)<<12;
+}
 
 #endif /* _PMAP_H_ */

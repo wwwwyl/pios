@@ -15,6 +15,7 @@ void exc_test(){
 void aarch64_init(){
     printf("init.c:\taarch64_init() is called\n");
     aarch64_detect_memory();
+    pm_init();
 
     exc_test();
 
