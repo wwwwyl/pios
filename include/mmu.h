@@ -3,7 +3,8 @@
 
 #include "types.h"
 
-#define BY2PG		4096
+#define PGSIZE		4096
+#define PGSHIFT		12
 
 #define PTE_VALID 1
 #define PTE_TABLE (1 << 1)
@@ -38,16 +39,25 @@ typedef uint64* Pgdir;
 #define E_NO_FREE_ENV   5       // Attempt to create a new environment beyond
 				// the maximum allowed
 
+// // 间接内存属性寄存器
+// const uint64 MAIR_EL1 = 0x440488;
+
+// // 翻译控制寄存器 
+// const uint64 TCR_EL1 = 0x603A193A19;
+
+// // 系统控制寄存器
+// const uint64 SCR_EL1 = 0x30D01825;
+
 /*
                                  计划中的内存布局
 
  o       虚存顶端 -----> +----------------------------+------------0xFFFF FFFF FFFF FFFF
  o                      |       外设，和一些乱七八糟的  |  
- o       KERNTOP -----> +----------------------------+------------0xFFFF FFFF 0400 0000  ==  Physics Memory Max		
+ o       KERNTOP -----> +----------------------------+------------0xFFFF 0000 0400 0000  ==  Physics Memory Max		
  o                      |       Kernel Stack         |                 		                                     
  o                      +----------------------------+----------               64MB，线性映射到物理内存
  o                      |       Kernel Text          |                        			
- o      KERNBASE -----> +----------------------------+------------0xFFFF FFFF 0000 0000 
+ o      KERNBASE -----> +----------------------------+------------0xFFFF 0000 0000 0000 
  o                      |                            | 
  o                      |                            | 
  o                      |                            | 

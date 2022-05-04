@@ -43,7 +43,7 @@ void aarch64_detect_memory()
 	extmem = 0;
 
     // Step 2: Calculate corresponding npage value.
-	npage = basemem >> 12;
+	npage = basemem >> PGSHIFT;
 
     printf("Physical memory: %dK available, ", (int)(maxpa / 1024));
     printf("base = %dK, extended = %dK\n", (int)(basemem / 1024),
@@ -84,12 +84,12 @@ static void *alloc(u_int n, u_int align)
 void pm_init() {
 	printf("physical memory init begin...\n");
 	// 给物存管理数组pages分配空间
-	pages = (struct Page *)alloc(npage*sizeof(struct Page), BY2PG);
-	if (pages==-E_NO_MEM)
+	pages = (struct Page *)alloc(npage*sizeof(struct Page), PGSIZE);
+	if (pages==(void*)-E_NO_MEM)
 		panic("aarch64_pm_init: fail\n");
 	// 空闲页面全塞进链表
 	LIST_INIT(&page_free_list);
-	freemem = ROUND(freemem, BY2PG);
+	freemem = ROUND(freemem, PGSIZE);
 	int i;
 	for (i=0; page2pa(&pages[i])<freemem; i++)
 		pages[i].pp_ref = 1;
@@ -130,7 +130,7 @@ int page_alloc(struct Page **pp) {
 	ppage_temp = LIST_FIRST(&page_free_list);
 	LIST_REMOVE(ppage_temp, pp_link);
 	/* Step 2: Initialize this page. */
-	bzero(page2pa(ppage_temp), BY2PG);
+	bzero((void*)page2pa(ppage_temp), PGSIZE);
 
 	*pp = ppage_temp;
 	return 0;
