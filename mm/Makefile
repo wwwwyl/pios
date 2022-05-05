@@ -10,8 +10,12 @@ INCLUDES	:= -I./ -I../ -I../include/
 
 all: pm.o vm.o
 
+%.s: %.c
+	$(CC) $(CFLAGS) $(INCLUDES) -S $<
+
+
 clean:
-	rm -rf *~ *.o
+	rm -rf *~ *.o *.s
 
 
 include ../include.mk

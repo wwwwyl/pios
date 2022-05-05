@@ -1,5 +1,5 @@
 #include "printf.h"
-#include "pm.h"
+#include "pmap.h"
 
 void exc_test(){
     printf("init.c:\texc_test() is called\n");
@@ -16,6 +16,8 @@ void aarch64_init(){
     printf("init.c:\taarch64_init() is called\n");
     aarch64_detect_memory();
     pm_init();
+    // printf("%d\n",asm_test(1,2));
+    vm_init();
 
     exc_test();
 

@@ -1,5 +1,6 @@
 #include "mmu.h"
-#include "pm.h"
+#include "pmap.h"
+// #include "pm.h"
 #include "printf.h"
 #include "types.h"
 
@@ -134,5 +135,19 @@ int page_alloc(struct Page **pp) {
 
 	*pp = ppage_temp;
 	return 0;
+}
+
+int asm_test(int i, int j)
+{
+	int res = 0;
+	__asm ("ADD %[result], %[input_i], %[input_j]"
+		: [result] "=r" (res)
+		: [input_i] "r" (i), [input_j] "r" (j)
+	);
+	__asm ("ADD %[result], %[input_i], %[input_j]"
+		: [result] "=r" (res)
+		: [input_i] "r" (i), [input_j] "r" (res)
+	);
+  return res;
 }
 

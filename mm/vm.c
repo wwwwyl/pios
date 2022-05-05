@@ -1,33 +1,100 @@
-#include "vm.h"
-#include "pm.h"
+#include "mmu.h"
+#include "pmap.h"
+// #include "vm.h"
 
 // ---------------------------------------------------
 //  virtual memory
 //  虚拟内存管理 
 // ---------------------------------------------------
 
-// 设置内核页表基址，理论上是这三行汇编：
-//      将页表基址填入x8寄存器（或任何一个通用寄存器）
-//      msr ttbr1_el1, x8
-//      isb
-// 但暂时没研究明白内联汇编怎么写...
-void set_ttbr1_el1(Pte pgdir) {
-
+// 设置低地址页表寄存器
+void set_ttbr0_el1(Pgdir pgdir) {
+    __asm ("msr ttbr0_el1, %[input]"
+		: 
+		: [input] "r" (pgdir)
+	);
+    __asm ("isb");
 }
 
-// 某种例子
-// int add(int i, int j)
-// {
-//   int res = 0;
-//   __asm ("ADD %[result], %[input_i], %[input_j]"
-//     : [result] "=r" (res)
-//     : [input_i] "r" (i), [input_j] "r" (j)
-//   );
-//   return res;
-// }
+// 设置高地址页表寄存器
+void set_ttbr1_el1(Pgdir pgdir) {
+    __asm ("msr ttbr1_el1, %[input]"
+		: 
+		: [input] "r" (pgdir)
+	);
+    __asm ("isb");
+}
+
+// 间接内存属性寄存器
+void set_mair_el1() {
+    __asm ("msr mair_el1, %[input]"
+		: 
+		: [input] "r" (MAIR_EL1)
+	);
+    __asm ("isb");
+}
+
+// 设置翻译控制寄存器
+void set_tcr_el1() {
+    __asm ("msr tcr_el1, %[input]"
+		: 
+		: [input] "r" (TCR_EL1)
+	);
+    __asm ("isb");
+}
+
+// 设置系统控制寄存器，此函数开启mmu
+void set_sctlr_el1() {
+    __asm ("msr sctlr_el1, %[input]"
+		: 
+		: [input] "r" (SCTLR_EL1)
+	);
+    __asm ("isb");
+}
+
+void vm_init() {
+    Pgdir pgdir;
+    struct Page *page;
+    page_alloc(&page);
+    pgdir = (Pgdir)page2pa(page);
+	kvm_init(pgdir);
+	// vm_print(pgdir);
+    set_ttbr0_el1(pgdir);
+    set_mair_el1();
+    set_tcr_el1();
+	printf("vm init almost success.\n");
+    set_sctlr_el1();
+	printf("vm init success.\n");
+}
+
+void kvm_init(Pgdir pgdir) {
+	int ret;
+	if ((ret=pages_map(pgdir,0,0,0x4000000,PTE_RW|PTE_USER))<0)
+		return;
+	printf("kvm_init success\n");
+}
+
 
 // 建立范围映射
-int vm_map(Pgdir pgdir, uint64 va, uint64 pa, u_int perm) {
+int pages_map(Pgdir pgdir, uint64 va, uint64 pa, 
+           uint64 length,u_int perm) {
+	uint64 a = ROUNDDOWN(va,PGSIZE);
+	uint64 last = ROUNDDOWN(va+length-1, PGSIZE);
+	Pte *pte;
+	int ret;
+	for(;;) {
+		if ((ret=pgdir_walk(pgdir,a,1,&pte))<0) {
+			printf("pages_map:failed\n");
+			return ret;
+		}
+		if (*pte & PTE_VALID)
+			panic("remap");
+		*pte = PA2PTE(pa) | perm | PTE_VALID;
+		if (a==last)
+			break;
+		a += PGSIZE;
+		pa += PGSIZE;
+	}
     return 0;
 }
 
@@ -148,18 +215,18 @@ struct Page *page_lookup(Pgdir pgdir, uint64 va, Pte **ppte)
 void vm_print_recursive(Pgdir pgdir, int level) {
     for (int i=0; i<512; i++) {
         if (pgdir[i] | PTE_VALID) {
-            if (level==1) printf(".. ");
-            if (level==0) printf(".. ");
-            printf("0x%x\n",pgdir[i]);
+            if (level<2) printf(".. ");
+            if (level<1) printf(".. ");
+            printf("%d: 0x%08x\n",i,pgdir[i]);
             if (pgdir[i] & PTE_TABLE) {
-                vm_print_recursive((Pgdir)pgdir[i],level-1);
+                vm_print_recursive((Pgdir)PTE2PA(pgdir[i]),level-1);
             }
         }
     }
 }
 
 void vm_print(Pgdir pgdir) {
-    printf("vm_print 0x%x\n...", pgdir);
+    printf("vm_print 0x%08x...\n", pgdir);
     vm_print_recursive(pgdir, 2);
 }
 
