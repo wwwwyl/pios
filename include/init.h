@@ -1,0 +1,1 @@
+void aarch64_init();
