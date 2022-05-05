@@ -28,6 +28,8 @@ kernel: $(modules)
 	$(LD) -N $(objects) -T $(link_script) -o qemu/kernel.elf
 	$(OBJCOPY) -O binary qemu/kernel.elf qemu/kernel.img
 	$(OBJDUMP) -S qemu/kernel.elf > qemu/kernel.asm
+	$(OBJDUMP) -t qemu/kernel.elf                     > qemu/kernel.sym
+# | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$$/d' 
 
 $(modules):
 	$(MAKE) --directory=$@
@@ -39,14 +41,15 @@ clean:
 		done; \
 	rm -rf *.o *~ $(vmlinux_elf)
 	rm qemu/kernel.asm
+	rm qemu/kernel.sym
 
 run:
 	qemu-system-aarch64 -M raspi3 -kernel qemu/kernel.img -serial stdio
 
-qemu: $(modules) kernel run_qemu
+gdb: $(modules) kernel run_qemu_for_gdb
 
-run_qemu:
-	qemu-system-aarch64 -M raspi3 -kernel qemu/kernel.elf -nographic  -s -S
+run_qemu_for_gdb:
+	qemu-system-aarch64 -M raspi3 -kernel qemu/kernel.elf -nographic -s -S
 
 
 include include.mk
