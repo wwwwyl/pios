@@ -27,6 +27,7 @@ kernel: $(modules)
 	mkdir -p qemu
 	$(LD) -N $(objects) -T $(link_script) -o qemu/kernel.elf
 	$(OBJCOPY) -O binary qemu/kernel.elf qemu/kernel.img
+	$(OBJDUMP) -S qemu/kernel.elf > qemu/kernel.asm
 
 $(modules):
 	$(MAKE) --directory=$@
@@ -37,8 +38,15 @@ clean:
 			$(MAKE) --directory=$$d clean; \
 		done; \
 	rm -rf *.o *~ $(vmlinux_elf)
+	rm qemu/kernel.asm
 
 run:
 	qemu-system-aarch64 -M raspi3 -kernel qemu/kernel.img -serial stdio
+
+qemu: $(modules) kernel run_qemu
+
+run_qemu:
+	qemu-system-aarch64 -M raspi3 -kernel qemu/kernel.elf -nographic  -s -S
+
 
 include include.mk

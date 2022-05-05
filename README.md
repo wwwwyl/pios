@@ -38,6 +38,16 @@ pios是一个将buaa-os-lab-2022实验的MOS系统移植到raspi3-Aarch64环境�
     # CFLAGS没有引入标准库，可能需要改
     ```
 
+    替换或添加一些内容以生成反汇编文件qemu/kernel.asm
+    ```makefile
+    # 抄自xv6
+    CFLAGS        := -Wall -Werror -O -ffreestanding 
+    CFLAGS        += -fno-omit-frame-pointer 
+    CFLAGS        += -fno-stack-protector -nostdinc -nostdlib -nostartfiles
+    CFLAGS        += -ggdb
+    OBJDUMP       := $(CROSS_COMPILE)objdump
+    ```
+
 #### 硬件模拟器
 
 * QEMU 5.0.0
